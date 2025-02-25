@@ -1,0 +1,30 @@
+{
+  "name": "iwf-web/json-request-check-bundle",
+  "description": "Symfony bundle to protect against HashDos attacks by limiting JSON request size",
+  "type": "symfony-bundle",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Nick Steinwand",
+      "email": "n.steinwand@iwf.ch"
+    }
+  ],
+  "require": {
+    "php": ">=8.2",
+    "symfony/framework-bundle": "^6.0|^7.0",
+    "symfony/dependency-injection": "^6.0|^7.0",
+    "symfony/http-kernel": "^6.0|^7.0",
+    "symfony/config": "^6.0|^7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "IWF\\JsonRequestCheckBundle\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "IWF\\JsonRequestCheckBundle\\Tests\\": "tests/"
+    }
+  },
+  "minimum-stability": "stable"
+}
