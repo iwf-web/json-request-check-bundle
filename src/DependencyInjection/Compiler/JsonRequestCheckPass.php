@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace IWF\JsonRequestCheckBundle\DependencyInjection\Compiler;
 
+use ReflectionAttribute;
+use Exception;
+use RuntimeException;
 use IWF\JsonRequestCheckBundle\Attribute\JsonRequestCheck;
 use IWF\JsonRequestCheckBundle\EventSubscriber\JsonRequestCheckSubscriber;
 use IWF\JsonRequestCheckBundle\Provider\JsonRequestCheckMaxContentLengthValueProvider;
@@ -32,7 +35,7 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  */
 final class JsonRequestCheckPass implements CompilerPassInterface
 {
-    private const CONTROLLER_TAG = 'controller.service_arguments';
+    private const string CONTROLLER_TAG = 'controller.service_arguments';
 
     /**
      * Processes the compiler pass to collect all JsonRequestCheck attribute values
@@ -133,14 +136,14 @@ final class JsonRequestCheckPass implements CompilerPassInterface
     /**
      * Adds the method configuration to the class map.
      *
-     * @param \ReflectionAttribute $attribute The JsonRequestCheck attribute
+     * @param ReflectionAttribute $attribute The JsonRequestCheck attribute
      * @param string $className The class name of the controller
      * @param string $methodName The method name
      * @param array<string, int> $jsonRequestCheckClassMap The map of controller to content length
      * @throws ServiceNotFoundException If a service cannot be found
      */
     private function addMethodConfigToClassMap(
-        \ReflectionAttribute $attribute,
+        ReflectionAttribute $attribute,
         string $className,
         string $methodName,
         array &$jsonRequestCheckClassMap
@@ -154,8 +157,8 @@ final class JsonRequestCheckPass implements CompilerPassInterface
             }
         } catch (ServiceNotFoundException $e) {
             $this->throwServiceNotFoundException($e, $classMapKey);
-        } catch (\Exception $e) {
-            throw new \RuntimeException(
+        } catch (Exception $e) {
+            throw new RuntimeException(
                 sprintf('Error processing JsonRequestCheck attribute for %s: %s', $classMapKey, $e->getMessage()),
                 0,
                 $e
@@ -177,7 +180,7 @@ final class JsonRequestCheckPass implements CompilerPassInterface
      *
      * @throws ServiceNotFoundException
      */
-    private function throwServiceNotFoundException(ServiceNotFoundException|\Exception $e, string $calledFrom): void
+    private function throwServiceNotFoundException(ServiceNotFoundException|Exception $e, string $calledFrom): void
     {
         throw new ServiceNotFoundException(
             id: $e->getId(),

@@ -31,7 +31,7 @@ final class PayloadTooLargeExceptionSubscriber implements EventSubscriberInterfa
     /**
      * High priority to handle these exceptions before other exception handlers.
      */
-    private const LISTENER_PRIORITY = 10;
+    private const int LISTENER_PRIORITY = 10;
 
     /**
      * {@inheritdoc}

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace IWF\JsonRequestCheckBundle\Attribute;
 
+use InvalidArgumentException;
 use Attribute;
 
 /**
@@ -41,7 +42,7 @@ final class JsonRequestCheck
         public readonly int $maxJsonContentSize,
     ) {
         if ($maxJsonContentSize <= 0) {
-            throw new \InvalidArgumentException('Maximum JSON content size must be a positive integer');
+            throw new InvalidArgumentException('Maximum JSON content size must be a positive integer');
         }
     }
 

@@ -60,7 +60,7 @@ readonly class JsonRequestCheckSubscriber implements EventSubscriberInterface
     private function shouldCheckRequest(Request $request): bool
     {
         // Only check POST requests
-        if ($request->getMethod() !== 'POST') {
+        if ($request->getMethod() !== Request::METHOD_POST) {
             return false;
         }
 

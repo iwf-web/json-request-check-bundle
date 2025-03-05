@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace IWF\JsonRequestCheckBundle\Exception;
 
+use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
@@ -22,17 +24,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  */
 final class PayloadTooLargeException extends HttpException
 {
-    public const int HTTP_STATUS_CODE = 413; // Payload Too Large
-
-    /**
-     * @var int|null The size of the received payload in bytes
-     */
-    private ?int $receivedLength;
-
-    /**
-     * @var int|null The maximum allowed payload size in bytes
-     */
-    private ?int $allowedLength;
+    public const int HTTP_STATUS_CODE = Response::HTTP_REQUEST_ENTITY_TOO_LARGE;
 
     /**
      * Create a new PayloadTooLargeException.
@@ -40,22 +32,19 @@ final class PayloadTooLargeException extends HttpException
      * @param int|null $receivedLength The size of the received payload in bytes
      * @param int|null $allowedLength The maximum allowed payload size in bytes
      * @param string|null $message Custom error message (if null, a message will be generated)
-     * @param \Throwable|null $previous Previous exception
+     * @param Throwable|null $previous Previous exception
      * @param int $code Error code
      * @param array $headers Additional HTTP headers to include in the response
      */
     public function __construct(
-        ?int $receivedLength = null,
-        ?int $allowedLength = null,
+        private readonly ?int $receivedLength = null,
+        private readonly ?int $allowedLength = null,
         ?string $message = null,
-        ?\Throwable $previous = null,
+        ?Throwable $previous = null,
         int $code = 0,
         array $headers = []
     ) {
-        $this->receivedLength = $receivedLength;
-        $this->allowedLength = $allowedLength;
-
-        $message = $message ?? $this->generateDefaultMessage($receivedLength, $allowedLength);
+        $message = $message ?? $this->generateDefaultMessage($this->receivedLength, $this->allowedLength);
 
         parent::__construct(self::HTTP_STATUS_CODE, $message, $previous, $headers, $code);
     }
