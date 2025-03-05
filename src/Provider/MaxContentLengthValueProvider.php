@@ -19,7 +19,7 @@ namespace IWF\JsonRequestCheckBundle\Provider;
  * This provider resolves the appropriate max content length value for a given controller
  * by checking the controller-specific configuration or falling back to the default value.
  */
-readonly class JsonRequestCheckMaxContentLengthValueProvider
+readonly class MaxContentLengthValueProvider
 {
     /**
      * @param array<string, int> $jsonRequestCheckClassMap Map of controller class::method to max content length

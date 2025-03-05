@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace IWF\JsonRequestCheckBundle;
 
-use IWF\JsonRequestCheckBundle\DependencyInjection\Compiler\JsonRequestCheckPass;
+use IWF\JsonRequestCheckBundle\DependencyInjection\Compiler\MaxContentLengthValuePass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -23,6 +23,6 @@ class IWFJsonRequestCheckBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new JsonRequestCheckPass());
+        $container->addCompilerPass(new MaxContentLengthValuePass());
     }
 }

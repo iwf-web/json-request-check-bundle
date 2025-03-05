@@ -15,7 +15,7 @@ namespace IWF\JsonRequestCheckBundle\DependencyInjection\Compiler;
 
 use IWF\JsonRequestCheckBundle\Attribute\JsonRequestCheck;
 use IWF\JsonRequestCheckBundle\EventSubscriber\JsonRequestCheckSubscriber;
-use IWF\JsonRequestCheckBundle\Provider\JsonRequestCheckMaxContentLengthValueProvider;
+use IWF\JsonRequestCheckBundle\Provider\MaxContentLengthValueProvider;
 use LogicException;
 use ReflectionClass;
 use ReflectionMethod;
@@ -30,7 +30,7 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  * Scans all registered controllers and collects JsonRequestCheck attribute settings
  * to make them available for runtime processing.
  */
-final class JsonRequestCheckPass implements CompilerPassInterface
+final class MaxContentLengthValuePass implements CompilerPassInterface
 {
     private const CONTROLLER_TAG = 'controller.service_arguments';
 
@@ -168,7 +168,7 @@ final class JsonRequestCheckPass implements CompilerPassInterface
      */
     private function registerClassMap(ContainerBuilder $container, array $jsonRequestCheckClassMap): void
     {
-        $container->getDefinition(JsonRequestCheckMaxContentLengthValueProvider::class)
+        $container->getDefinition(MaxContentLengthValueProvider::class)
             ->setArgument('$jsonRequestCheckClassMap', $jsonRequestCheckClassMap);
     }
 
