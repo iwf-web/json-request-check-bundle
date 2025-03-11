@@ -3,18 +3,15 @@
 namespace IWF\JsonRequestCheckBundle\Check;
 
 use IWF\JsonRequestCheckBundle\Exception\JsonRequestValidationException;
-use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 
-readonly class JsonRequestCheckersRepository
+class JsonRequestCheckersChain
 {
     /**
      * @param iterable<JsonRequestCheckerInterface> $checkers
      */
     public function __construct(
-        #[AutowireIterator('iwf.jsonRequestChecker')]
-        private iterable $checkers,
+        private array $checkers,
     ) {}
 
     public function checkEvent(KernelEvent $event): void
@@ -32,6 +29,11 @@ readonly class JsonRequestCheckersRepository
                 $this->handleInvalidRequest($event, $request, $result);
             }
         }
+    }
+
+    public function addChecker(JsonRequestCheckerInterface $checker): void
+    {
+        $this->checkers[] = $checker;
     }
 
     /**

@@ -18,6 +18,7 @@ use IWF\JsonRequestCheckBundle\EventSubscriber\JsonRequestCheckSubscriber;
 use IWF\JsonRequestCheckBundle\Provider\MaxContentLengthValueProvider;
 use LogicException;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionMethod;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -26,7 +27,6 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 /**
  * CompilerPass to collect all controllers with JsonRequestCheck attributes.
- *
  * Scans all registered controllers and collects JsonRequestCheck attribute settings
  * to make them available for runtime processing.
  */
@@ -37,9 +37,8 @@ final class MaxContentLengthValuePass implements CompilerPassInterface
     /**
      * Processes the compiler pass to collect all JsonRequestCheck attribute values
      * and provide them to the JsonRequestCheckMaxContentLengthValueProvider.
-     *
      * @throws LogicException If the JsonRequestCheckSubscriber is not registered
-     * @throws ServiceNotFoundException If a required service cannot be found
+     * @throws ServiceNotFoundException|ReflectionException If a required service cannot be found
      */
     public function process(ContainerBuilder $container): void
     {
@@ -52,7 +51,6 @@ final class MaxContentLengthValuePass implements CompilerPassInterface
 
     /**
      * Checks if all required services are registered in the container.
-     *
      * @throws LogicException If a required service is missing
      */
     private function validateRequiredServices(ContainerBuilder $container): void
@@ -66,9 +64,8 @@ final class MaxContentLengthValuePass implements CompilerPassInterface
 
     /**
      * Collects all JsonRequestCheck attribute settings from registered controllers.
-     *
      * @return array<string, int> Map of controller class::method to maximum content length value
-     * @throws ServiceNotFoundException If a service cannot be found
+     * @throws ServiceNotFoundException|ReflectionException If a service cannot be found
      */
     private function collectJsonRequestCheckAttributes(ContainerBuilder $container): array
     {
@@ -91,7 +88,6 @@ final class MaxContentLengthValuePass implements CompilerPassInterface
 
     /**
      * Returns all controller service definitions.
-     *
      * @return Definition[] Array of controller definitions
      */
     private function getControllerDefinitions(ContainerBuilder $container): array
@@ -106,7 +102,6 @@ final class MaxContentLengthValuePass implements CompilerPassInterface
 
     /**
      * Processes the methods of a controller class to find JsonRequestCheck attributes.
-     *
      * @param ReflectionClass $reflClass The ReflectionClass instance of the controller class
      * @param string $className The full class name of the controller
      * @param array<string, int> $jsonRequestCheckClassMap The map of controller to content length
@@ -115,8 +110,9 @@ final class MaxContentLengthValuePass implements CompilerPassInterface
     private function processClassMethods(
         ReflectionClass $reflClass,
         string $className,
-        array &$jsonRequestCheckClassMap
-    ): void {
+        array &$jsonRequestCheckClassMap,
+    ): void
+    {
         $publicNonStaticMethods = $reflClass->getMethods(ReflectionMethod::IS_PUBLIC | ~ReflectionMethod::IS_STATIC);
 
         foreach ($publicNonStaticMethods as $reflMethod) {
@@ -132,7 +128,6 @@ final class MaxContentLengthValuePass implements CompilerPassInterface
 
     /**
      * Adds the method configuration to the class map.
-     *
      * @param \ReflectionAttribute $attribute The JsonRequestCheck attribute
      * @param string $className The class name of the controller
      * @param string $methodName The method name
@@ -143,8 +138,9 @@ final class MaxContentLengthValuePass implements CompilerPassInterface
         \ReflectionAttribute $attribute,
         string $className,
         string $methodName,
-        array &$jsonRequestCheckClassMap
-    ): void {
+        array &$jsonRequestCheckClassMap,
+    ): void
+    {
         try {
             $classMapKey = sprintf('%s::%s', $className, $methodName);
             $attributeInstance = $attribute->newInstance();
@@ -174,7 +170,6 @@ final class MaxContentLengthValuePass implements CompilerPassInterface
 
     /**
      * Throws an enhanced ServiceNotFoundException with additional context.
-     *
      * @throws ServiceNotFoundException
      */
     private function throwServiceNotFoundException(ServiceNotFoundException|\Exception $e, string $calledFrom): void

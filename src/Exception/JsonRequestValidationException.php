@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace IWF\JsonRequestCheckBundle\Exception;
 
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Throwable;
 
 class JsonRequestValidationException extends HttpException
 {
@@ -21,7 +22,7 @@ class JsonRequestValidationException extends HttpException
 
     private array $errorContext;
 
-    public function __construct(string $message, array $errorContext = [], \Throwable $previous = null)
+    public function __construct(string $message, array $errorContext = [], ?Throwable $previous = null)
     {
         parent::__construct(self::HTTP_STATUS_CODE, $message, $previous);
         $this->errorContext = $errorContext;

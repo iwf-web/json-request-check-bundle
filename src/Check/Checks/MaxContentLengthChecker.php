@@ -2,15 +2,17 @@
 
 namespace IWF\JsonRequestCheckBundle\Check\Checks;
 
+use IWF\JsonRequestCheckBundle\Attribute\JsonRequestChecker;
 use IWF\JsonRequestCheckBundle\Check\JsonRequestCheckerInterface;
 use IWF\JsonRequestCheckBundle\Check\JsonRequestCheckResult;
 use IWF\JsonRequestCheckBundle\Provider\MaxContentLengthValueProvider;
 use Symfony\Component\HttpFoundation\Request;
 
-class MaxContentLengthChecker implements JsonRequestCheckerInterface
+#[JsonRequestChecker]
+readonly class MaxContentLengthChecker implements JsonRequestCheckerInterface
 {
     public function __construct(
-        private readonly MaxContentLengthValueProvider $maxContentLengthValueProvider,
+        private MaxContentLengthValueProvider $maxContentLengthValueProvider,
     ) {}
 
     public function check(Request $request): JsonRequestCheckResult

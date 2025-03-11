@@ -13,16 +13,15 @@ declare(strict_types=1);
 
 namespace IWF\JsonRequestCheckBundle\EventSubscriber;
 
-use IWF\JsonRequestCheckBundle\Check\JsonRequestCheckersRepository;
+use IWF\JsonRequestCheckBundle\Check\JsonRequestCheckersChain;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 readonly class JsonRequestCheckSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private JsonRequestCheckersRepository $checksRepository,
+        private JsonRequestCheckersChain $checksRepository,
     ) {}
 
     public static function getSubscribedEvents(): array

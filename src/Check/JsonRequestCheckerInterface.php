@@ -2,10 +2,10 @@
 
 namespace IWF\JsonRequestCheckBundle\Check;
 
-use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
+use IWF\JsonRequestCheckBundle\Attribute\JsonRequestChecker;
 use Symfony\Component\HttpFoundation\Request;
 
-#[AutoconfigureTag('iwf.jsonRequestChecker')]
+#[JsonRequestChecker]
 interface JsonRequestCheckerInterface
 {
     public function check(Request $request): JsonRequestCheckResult;
