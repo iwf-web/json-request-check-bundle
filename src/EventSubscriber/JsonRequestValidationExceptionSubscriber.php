@@ -62,6 +62,7 @@ final class JsonRequestValidationExceptionSubscriber implements EventSubscriberI
         }
     }
 
+    // TODO combine exception handling
     private function handlePayloadTooLarge(ExceptionEvent $event, PayloadTooLargeException $exception): void
     {
         $responseData = [

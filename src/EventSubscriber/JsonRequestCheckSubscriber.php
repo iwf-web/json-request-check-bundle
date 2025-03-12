@@ -16,28 +16,37 @@ namespace IWF\JsonRequestCheckBundle\EventSubscriber;
 use IWF\JsonRequestCheckBundle\Check\JsonRequestCheckersChain;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 readonly class JsonRequestCheckSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private JsonRequestCheckersChain $checksRepository,
+        private JsonRequestCheckersChain $checkersChain,
     ) {}
 
     public static function getSubscribedEvents(): array
     {
         return [
-            KernelEvents::CONTROLLER => 'checkRequest',
+            KernelEvents::CONTROLLER => 'checkEvent',
         ];
     }
 
-    public function checkRequest(KernelEvent $event): void
+    /**
+     * @throws HttpExceptionInterface
+     */
+    public function checkEvent(KernelEvent $event): void
     {
         if (!$event->isMainRequest()) {
             return;
         }
 
-        $this->checksRepository->checkEvent($event);
-
+        try {
+            $this->checkersChain->checkEvent($event);
+        } catch (HttpExceptionInterface $e) {
+            if (true) {
+                throw $e;
+            }
+        }
     }
 }

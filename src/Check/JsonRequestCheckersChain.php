@@ -3,7 +3,9 @@
 namespace IWF\JsonRequestCheckBundle\Check;
 
 use IWF\JsonRequestCheckBundle\Exception\JsonRequestValidationException;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class JsonRequestCheckersChain
 {
@@ -22,6 +24,11 @@ class JsonRequestCheckersChain
     }
 
 
+    /**
+     * @param KernelEvent $event
+     * @throws HttpExceptionInterface
+     * @return void
+     */
     public function checkEvent(KernelEvent $event): void
     {
         $request = $event->getRequest();
@@ -47,8 +54,9 @@ class JsonRequestCheckersChain
     /**
      * Handle invalid requests
      * (╯°□°)╯︵ ┻━┻
+     * @throws HttpExceptionInterface
      */
-    private function handleInvalidRequest(KernelEvent $event, $request, $result): void
+    private function handleInvalidRequest(KernelEvent $event, Request $request, JsonRequestCheckResult $result): void
     {
         $request->request->replace();
 
