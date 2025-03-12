@@ -8,11 +8,19 @@ use Symfony\Component\HttpKernel\Event\KernelEvent;
 class JsonRequestCheckersChain
 {
     /**
-     * @param iterable<JsonRequestCheckerInterface> $checkers
+     * @var array<JsonRequestCheckerInterface>
      */
-    public function __construct(
-        private array $checkers,
-    ) {}
+    private $checkers; // TODO currently php 7 syntax
+
+    /**
+     * @param JsonRequestCheckerInterface[] $checkers
+     */
+    public function __construct()
+    {
+        // TODO currently php 7 syntax
+        $this->checkers = [];
+    }
+
 
     public function checkEvent(KernelEvent $event): void
     {
@@ -46,7 +54,9 @@ class JsonRequestCheckersChain
 
         $event->stopPropagation();
 
-        throw new JsonRequestValidationException(
+        $exceptionClass = $result->getCustomExceptionClass() ?? JsonRequestValidationException::class;
+
+        throw new $exceptionClass(
             $result->getErrorMessage(),
             $result->getErrorContext()
         );

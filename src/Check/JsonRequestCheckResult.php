@@ -8,6 +8,8 @@ class JsonRequestCheckResult
     private ?string $errorMessage = null;
     private array $errorContext = [];
 
+    private ?string $customExceptionClass = null;
+
     private function __construct(bool $valid)
     {
         $this->valid = $valid;
@@ -18,11 +20,12 @@ class JsonRequestCheckResult
         return new self(true);
     }
 
-    public static function createInvalid(string $errorMessage, array $errorContext = []): self
+    public static function createInvalid(?string $errorMessage = null, array $errorContext = [], ?string $customExceptionClass = null): self
     {
         $result = new self(false);
         $result->errorMessage = $errorMessage;
         $result->errorContext = $errorContext;
+        $result->customExceptionClass = $customExceptionClass;
 
         return $result;
     }
@@ -40,5 +43,10 @@ class JsonRequestCheckResult
     public function getErrorContext(): array
     {
         return $this->errorContext;
+    }
+
+    public function getCustomExceptionClass(): ?string
+    {
+        return $this->customExceptionClass;
     }
 }

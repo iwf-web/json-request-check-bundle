@@ -5,6 +5,7 @@ namespace IWF\JsonRequestCheckBundle\Check\Checks;
 use IWF\JsonRequestCheckBundle\Attribute\JsonRequestChecker;
 use IWF\JsonRequestCheckBundle\Check\JsonRequestCheckerInterface;
 use IWF\JsonRequestCheckBundle\Check\JsonRequestCheckResult;
+use IWF\JsonRequestCheckBundle\Exception\PayloadTooLargeException;
 use IWF\JsonRequestCheckBundle\Provider\MaxContentLengthValueProvider;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -24,12 +25,12 @@ readonly class MaxContentLengthChecker implements JsonRequestCheckerInterface
 
         if ($contentLength > $maxContentLength) {
             return JsonRequestCheckResult::createInvalid(
-//                TODO implement specific exceptions
-                'Payload too large',
+                null,
                 [
-                    'received_length' => $contentLength,
-                    'allowed_length' => $maxContentLength,
-                ]
+                    'receivedLength' => $contentLength,
+                    'allowedLength' => $maxContentLength,
+                ],
+                PayloadTooLargeException::class,
             );
         }
 

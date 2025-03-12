@@ -15,13 +15,13 @@ class JsonRequestCheckersPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        $definition = $this->findDefinition($container);
+        $chainDefinition = $this->findChainDefinition($container);
         $taggedCheckers = $this->collectJsonRequestCheckers($container);
 
-        $this->appendToChain($definition, $taggedCheckers);
+        $this->appendToChain($chainDefinition, $taggedCheckers);
     }
 
-    private function findDefinition(ContainerBuilder $container): Definition
+    private function findChainDefinition(ContainerBuilder $container): Definition
     {
         if (!$container->hasDefinition(JsonRequestCheckersChain::class)) {
             // TODO - think about: dont think we need to throw an exception because its in my bundle...
@@ -44,10 +44,10 @@ class JsonRequestCheckersPass implements CompilerPassInterface
         return $checkers;
     }
 
-    private function appendToChain($definition, array $checkers): void
+    private function appendToChain(Definition $chainDefinition, array $checkers): void
     {
         foreach ($checkers as $id => $tags) {
-            $definition->addMethodCall('addChecker', [new Reference($id)]);
+            $chainDefinition->addMethodCall('addChecker', [new Reference($id)]);
         }
     }
 }

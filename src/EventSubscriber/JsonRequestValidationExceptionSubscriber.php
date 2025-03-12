@@ -52,20 +52,14 @@ final class JsonRequestValidationExceptionSubscriber implements EventSubscriberI
     {
         $exception = $event->getThrowable();
 
-        if (!$exception instanceof PayloadTooLargeException) {
+        if ($exception instanceof PayloadTooLargeException) {
             $this->handlePayloadTooLarge($event, $exception);
             return;
         }
 
         if ($exception instanceof JsonRequestValidationException) {
             $this->handleJsonRequestValidation($event, $exception);
-            return;
         }
-
-        $responseData = $this->prepareResponseData($exception);
-        $response = new JsonResponse($responseData, PayloadTooLargeException::HTTP_STATUS_CODE);
-
-        $event->setResponse($response);
     }
 
     private function handlePayloadTooLarge(ExceptionEvent $event, PayloadTooLargeException $exception): void
