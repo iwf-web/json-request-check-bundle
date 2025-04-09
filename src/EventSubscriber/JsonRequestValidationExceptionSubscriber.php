@@ -65,9 +65,7 @@ final class JsonRequestValidationExceptionSubscriber implements EventSubscriberI
     // TODO combine exception handling
     private function handlePayloadTooLarge(ExceptionEvent $event, PayloadTooLargeException $exception): void
     {
-        $responseData = [
-            'error' => $exception->getMessage(),
-        ];
+        $responseData['error'] = $exception->getMessage();
 
         if ($exception->getReceivedLength() !== null) {
             $responseData['received_length'] = $exception->getReceivedLength();

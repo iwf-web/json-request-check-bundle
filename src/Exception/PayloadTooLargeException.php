@@ -23,7 +23,7 @@ use Throwable;
  */
 final class PayloadTooLargeException extends HttpException
 {
-    public const int HTTP_STATUS_CODE = 413; // Payload Too Large
+    public const HTTP_STATUS_CODE = 413; // Payload Too Large
 
     /**
      * @var int|null The size of the received payload in bytes

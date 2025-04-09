@@ -2,14 +2,13 @@
 
 namespace IWF\JsonRequestCheckBundle\Check\Checks;
 
-use IWF\JsonRequestCheckBundle\Attribute\JsonRequestChecker;
 use IWF\JsonRequestCheckBundle\Check\JsonRequestCheckerInterface;
 use IWF\JsonRequestCheckBundle\Check\JsonRequestCheckResult;
+use IWF\JsonRequestCheckBundle\Exception\ContentLengthMismatchException;
 use IWF\JsonRequestCheckBundle\Exception\PayloadTooLargeException;
 use IWF\JsonRequestCheckBundle\Provider\MaxContentLengthValueProvider;
 use Symfony\Component\HttpFoundation\Request;
 
-#[JsonRequestChecker]
 readonly class MaxContentLengthChecker implements JsonRequestCheckerInterface
 {
     public function __construct(
@@ -18,32 +17,40 @@ readonly class MaxContentLengthChecker implements JsonRequestCheckerInterface
 
     public function check(Request $request): JsonRequestCheckResult
     {
-        $contentLength = (int)$request->server->get('HTTP_CONTENT_LENGTH');
+        $declaredContentLength = (int)$request->server->get('HTTP_CONTENT_LENGTH');
         $controllerClassAndAction = $request->attributes->get('_controller');
-
         $maxContentLength = $this->maxContentLengthValueProvider->getMaxContentLengthValue($controllerClassAndAction);
+        $actualContentLength = strlen($request->getContent());
 
-        if ($contentLength > $maxContentLength) {
+        if ($actualContentLength !== $declaredContentLength) {
+            return JsonRequestCheckResult::createInvalid(customExceptionClass: ContentLengthMismatchException::class);
+        }
+
+        if ($actualContentLength > $maxContentLength) {
             return JsonRequestCheckResult::createInvalid(
                 null,
                 [
-                    'receivedLength' => $contentLength,
+                    'receivedLength' => $actualContentLength,
                     'allowedLength' => $maxContentLength,
                 ],
                 PayloadTooLargeException::class,
             );
         }
 
+
         return JsonRequestCheckResult::createValid();
     }
 
     public function supports(Request $request): bool
     {
-        if ($request->getMethod() !== 'POST') {
+        if ($request->getMethod() !== Request::METHOD_POST) {
             return false;
         }
 
-        if ((int)$request->server->get('HTTP_CONTENT_LENGTH') === 0) {
+        $declaredContentLength = (int)$request->server->get('HTTP_CONTENT_LENGTH');
+        $actualContentLength = strlen($request->getContent());
+
+        if ($declaredContentLength === 0 && $actualContentLength === 0) {
             return false;
         }
 
@@ -63,6 +70,7 @@ readonly class MaxContentLengthChecker implements JsonRequestCheckerInterface
 
         return true;
     }
+
 
     private function contentLooksLikeJson(string $content): bool
     {

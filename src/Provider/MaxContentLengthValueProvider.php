@@ -44,7 +44,7 @@ readonly class MaxContentLengthValueProvider
     public function getMaxContentLengthValue(string $controllerClassAndAction): int
     {
         // For invokable controllers, the route may reference the class name only,
-        // but the annotation is on the __invoke method
+        // but the attributes are on the __invoke method
         $invokableControllerKey = $controllerClassAndAction . '::__invoke';
 
         if (isset($this->jsonRequestCheckClassMap[$invokableControllerKey])) {

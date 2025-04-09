@@ -24,7 +24,6 @@ class JsonRequestCheckersPass implements CompilerPassInterface
     private function findChainDefinition(ContainerBuilder $container): Definition
     {
         if (!$container->hasDefinition(JsonRequestCheckersChain::class)) {
-            // TODO - think about: dont think we need to throw an exception because its in my bundle...
             throw new LogicException(
                 sprintf('No definition found for %s', JsonRequestCheckersChain::class)
             );
@@ -37,7 +36,6 @@ class JsonRequestCheckersPass implements CompilerPassInterface
     {
         $checkers = $container->findTaggedServiceIds('iwf.jsonRequestChecker');
         if (empty($checkers)) {
-            // TODO - think about: dont think we need to throw an exception because its in my bundle...
             throw new LogicException('No checkers found');
         }
 
