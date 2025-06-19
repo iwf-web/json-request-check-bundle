@@ -46,6 +46,9 @@ iwf_json_request_check:
     default_max_content_length: '%env(int:IWF_JSON_REQUEST_CHECK_DEFAULT_MAX_LENGTH)%'
 ```
 
+To have a clue about size you can find a file with a JSON of **4kb** in the examples:
+[example-payload-4kb.json](examples/files/example-payload-4kb.json)
+
 ## Usage
 
 ### Add the Attribute to Controller Methods

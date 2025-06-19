@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace IWF\JsonRequestCheckBundle\EventSubscriber;
 
+use IWF\JsonRequestCheckBundle\Exception\JsonRequestValidationException;
 use IWF\JsonRequestCheckBundle\Exception\PayloadTooLargeException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,12 +22,11 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Exception subscriber that converts PayloadTooLargeException to proper HTTP responses.
- *
  * This subscriber ensures that PayloadTooLargeException instances are properly
  * converted to HTTP 413 responses with a JSON body instead of triggering the
  * default exception handling.
  */
-final class PayloadTooLargeExceptionSubscriber implements EventSubscriberInterface
+final class JsonRequestValidationExceptionSubscriber implements EventSubscriberInterface
 {
     /**
      * High priority to handle these exceptions before other exception handlers.
@@ -45,7 +45,6 @@ final class PayloadTooLargeExceptionSubscriber implements EventSubscriberInterfa
 
     /**
      * Handles the kernel exception event for PayloadTooLargeException.
-     *
      * If the exception is a PayloadTooLargeException, converts it to a
      * proper JSON response with HTTP status code 413.
      */
@@ -53,36 +52,44 @@ final class PayloadTooLargeExceptionSubscriber implements EventSubscriberInterfa
     {
         $exception = $event->getThrowable();
 
-        if (!$exception instanceof PayloadTooLargeException) {
+        if ($exception instanceof PayloadTooLargeException) {
+            $this->handlePayloadTooLarge($event, $exception);
             return;
         }
 
-        $responseData = $this->prepareResponseData($exception);
-        $response = new JsonResponse($responseData, PayloadTooLargeException::HTTP_STATUS_CODE);
-
-        $event->setResponse($response);
+        if ($exception instanceof JsonRequestValidationException) {
+            $this->handleJsonRequestValidation($event, $exception);
+        }
     }
 
-    /**
-     * Prepares the response data for the exception.
-     *
-     * @return array<string, mixed> Response data array
-     */
-    private function prepareResponseData(PayloadTooLargeException $exception): array
+    // TODO combine exception handling
+    private function handlePayloadTooLarge(ExceptionEvent $event, PayloadTooLargeException $exception): void
     {
-        $data = [
-            'error' => $exception->getMessage(),
-        ];
+        $responseData['error'] = $exception->getMessage();
 
-        // Add additional context if available
         if ($exception->getReceivedLength() !== null) {
-            $data['received_length'] = $exception->getReceivedLength();
+            $responseData['received_length'] = $exception->getReceivedLength();
         }
 
         if ($exception->getAllowedLength() !== null) {
-            $data['allowed_length'] = $exception->getAllowedLength();
+            $responseData['allowed_length'] = $exception->getAllowedLength();
         }
 
-        return $data;
+        $response = new JsonResponse($responseData, PayloadTooLargeException::HTTP_STATUS_CODE);
+        $event->setResponse($response);
+    }
+
+    private function handleJsonRequestValidation(ExceptionEvent $event, JsonRequestValidationException $exception): void
+    {
+        $responseData = [
+            'error' => $exception->getMessage(),
+        ];
+
+        if (!empty($exception->getErrorContext())) {
+            $responseData['context'] = $exception->getErrorContext();
+        }
+
+        $response = new JsonResponse($responseData, $exception->getStatusCode());
+        $event->setResponse($response);
     }
 }
