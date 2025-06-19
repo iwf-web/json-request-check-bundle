@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace IWF\JsonRequestCheckBundle\Exception;
 
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Throwable;
 
 /**
  * Exception thrown when a JSON payload exceeds the maximum allowed size.
@@ -22,7 +23,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  */
 final class PayloadTooLargeException extends HttpException
 {
-    public const int HTTP_STATUS_CODE = 413; // Payload Too Large
+    public const HTTP_STATUS_CODE = 413; // Payload Too Large
 
     /**
      * @var int|null The size of the received payload in bytes
@@ -40,22 +41,21 @@ final class PayloadTooLargeException extends HttpException
      * @param int|null $receivedLength The size of the received payload in bytes
      * @param int|null $allowedLength The maximum allowed payload size in bytes
      * @param string|null $message Custom error message (if null, a message will be generated)
-     * @param \Throwable|null $previous Previous exception
+     * @param Throwable|null $previous Previous exception
      * @param int $code Error code
      * @param array $headers Additional HTTP headers to include in the response
      */
     public function __construct(
-        ?int $receivedLength = null,
-        ?int $allowedLength = null,
         ?string $message = null,
-        ?\Throwable $previous = null,
+        array $errorContext = [],
+        ?Throwable $previous = null,
         int $code = 0,
         array $headers = []
     ) {
-        $this->receivedLength = $receivedLength;
-        $this->allowedLength = $allowedLength;
+        $this->receivedLength = $errorContext['receivedLength'] ?? null;
+        $this->allowedLength = $errorContext['allowedLength'] ?? null;
 
-        $message = $message ?? $this->generateDefaultMessage($receivedLength, $allowedLength);
+        $message = $message ?? $this->generateDefaultMessage();
 
         parent::__construct(self::HTTP_STATUS_CODE, $message, $previous, $headers, $code);
     }
@@ -79,27 +79,27 @@ final class PayloadTooLargeException extends HttpException
     /**
      * Generate a default error message based on available information.
      */
-    private function generateDefaultMessage(?int $receivedLength, ?int $allowedLength): string
+    private function generateDefaultMessage(): string
     {
-        if ($receivedLength !== null && $allowedLength !== null) {
+        if ($this->receivedLength !== null && $this->allowedLength !== null) {
             return sprintf(
                 'JSON payload too large: %d bytes received, maximum allowed is %d bytes',
-                $receivedLength,
-                $allowedLength
+                $this->receivedLength,
+                $this->allowedLength
             );
         }
 
-        if ($receivedLength !== null) {
+        if ($this->receivedLength !== null) {
             return sprintf(
                 'JSON payload too large: %d received bytes exceeding maximum allowed bytes',
-                $receivedLength
+                $this->receivedLength
             );
         }
 
-        if ($allowedLength !== null) {
+        if ($this->allowedLength !== null) {
             return sprintf(
                 'JSON payload too large: maximum allowed bytes (%d) exceeded',
-                $allowedLength
+                $this->allowedLength
             );
         }
 
