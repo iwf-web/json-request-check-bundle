@@ -15,12 +15,13 @@ namespace IWF\JsonRequestCheckBundle\Exception;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Throwable;
 
 final class ContentLengthMismatchException extends HttpException
 {
     public function __construct(
         string $message = 'Content-Length header does not match actual content length',
-        \Throwable $previous = null,
+        ?Throwable $previous = null,
         array $headers = [],
         ?int $code = 0,
     )
