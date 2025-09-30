@@ -2,9 +2,13 @@
 # End of https://www.richie-bendall.ml/gitattributes-generator/
 
 #.github export-ignore
+#.phive export-ignore
 #examples export-ignore
+#tools export-ignore
 #.editorconfig export-ignore
 #.gitignore export-ignore
 #.gitattributes export-ignore
 #CODEOWNERS export-ignore
 #*.md export-ignore
+#*.neon export-ignore
+#*.dist.php export-ignore

@@ -52,12 +52,16 @@
     "archive": {
         "exclude": [
             ".github",
+            ".phive",
             "examples",
+            "tools",
             ".editorconfig",
             ".gitignore",
             ".gitattributes",
             "CODEOWNERS",
-            "*.md"
+            "*.md",
+            "*.neon",
+            "*.dist.php"
         ]
     }
 }

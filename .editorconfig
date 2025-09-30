@@ -46,3 +46,8 @@ trim_trailing_whitespace = false
 [{*.json,.phpunit.result.cache,composer.lock}]
 indent_size = 4
 tab_width = 4
+
+[phpstan.{neon,neon.dist,dist.neon}]
+indent_style = tab
+indent_size = 4
+tab_width = 4

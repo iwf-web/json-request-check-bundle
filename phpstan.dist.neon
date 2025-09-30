@@ -1,0 +1,10 @@
+# https://phpstan.org/config-reference
+includes:
+	- phpstan-baseline.neon
+parameters:
+	level: 9
+	paths:
+		- src
+		#- tests
+	errorFormat: table
+	#editorUrl: 'phpstorm://open?file=%%file%%&line=%%line%%'

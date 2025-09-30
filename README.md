@@ -103,6 +103,71 @@ class ApiController extends AbstractController
 
 When a request exceeds the allowed size, an HTTP 413 response is automatically returned with the message "JSON payload too large" along with details about the received size and maximum allowed size.
 
+## Local Development Setup
+
+### Installing Development Tools
+
+This project uses PHIVE for managing PHP development tools. Follow these steps to set up your local development environment:
+
+#### Step 1: Install PHIVE
+
+```bash
+brew install phive
+```
+
+#### Step 2: Install Development Dependencies
+
+```bash
+# Install development tools via PHIVE
+phive install
+
+# Install Composer dependencies
+tools/composer install
+tools/composer install -d tools
+ln -s vendor/bin/phpstan tools/phpstan
+```
+
+### Running Code Quality Checks
+
+#### PHP-CS-Fixer (Code Style)
+
+Check code style violations:
+```bash
+tools/php-cs-fixer fix --dry-run --diff
+```
+
+Fix code style violations automatically:
+```bash
+tools/php-cs-fixer fix
+```
+
+#### PHPStan (Static Analysis)
+
+Run PHPStan analysis:
+```bash
+tools/phpstan analyse
+```
+
+Generate PHPStan baseline for existing issues:
+```bash
+tools/phpstan analyse --generate-baseline
+```
+
+### Development Workflow
+
+Before committing your changes, ensure all checks pass:
+
+```bash
+# Check code style
+tools/php-cs-fixer fix --dry-run --diff
+
+# Run static analysis
+tools/phpstan analyse
+
+# If everything passes, fix code style
+tools/php-cs-fixer fix
+```
+
 ## Built With
 
 - [PHP](https://www.php.net/) - Programming Language

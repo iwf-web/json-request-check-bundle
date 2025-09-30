@@ -1,9 +1,9 @@
 .claude/settings.local.json
-/vendor/
-/composer.lock
+tools/*
+!tools/composer.json
+vendor
+composer.lock
 .phpunit.result.cache
+.php-cs-fixer.cache
 /.idea/
 /.vscode/
-/var/
-/tests/var/
-/.php-cs-fixer.cache

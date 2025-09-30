@@ -4,11 +4,29 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Commands
 
-This is a Symfony bundle package managed with Composer:
+This is a Symfony bundle package managed with Composer. It uses PHIVE for managing PHP development tools:
 
 - **Install dependencies**: `composer install`
-- **Check code style**: No specific linter configured - follow PSR-12 and existing code style
+- **Install development tools**: `phive install && tools/composer install && tools/composer install -d tools`
+- **Check code style**: `tools/php-cs-fixer fix --dry-run --diff`
+- **Fix code style**: `tools/php-cs-fixer fix`
+- **Static analysis**: `tools/phpstan analyse`
+- **Generate PHPStan baseline**: `tools/phpstan analyse --generate-baseline`
 - **Testing**: No test suite currently present
+
+### Development Workflow
+
+Before committing changes, run:
+```bash
+# Check code style violations
+tools/php-cs-fixer fix --dry-run --diff
+
+# Run static analysis
+tools/phpstan analyse
+
+# Fix code style if checks pass
+tools/php-cs-fixer fix
+```
 
 ## Architecture Overview
 
