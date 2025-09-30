@@ -42,3 +42,7 @@ trim_trailing_whitespace = false
 [*.{markdown,md}]
 # Trailing whitespace means manual linebreaks in Markdown thus is not trimmable
 trim_trailing_whitespace = false
+
+[{*.json,.phpunit.result.cache,composer.lock}]
+indent_size = 4
+tab_width = 4

@@ -1,30 +1,63 @@
 {
-  "name": "iwf-web/json-request-check-bundle",
-  "description": "Symfony bundle to protect against HashDos attacks by limiting JSON request size",
-  "type": "symfony-bundle",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Nick Steinwand",
-      "email": "n.steinwand@iwf.ch"
+    "name": "iwf-web/json-request-check-bundle",
+    "description": "Symfony bundle to protect against HashDos attacks by limiting JSON request size",
+    "type": "symfony-bundle",
+    "keywords": [
+        "symfony",
+        "bundle",
+        "json",
+        "request",
+        "dos",
+        "hashdos",
+        "security"
+    ],
+    "homepage": "https://github.com/iwf-web/json-request-check-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nick Steinwand",
+            "email": "n.steinwand@iwf.ch",
+            "homepage": "https://github.com/steinwandnick",
+            "role": "Maintainer"
+        }
+    ],
+    "support": {
+        "email": "developer@iwf.ch",
+        "issues": "https://github.com/iwf-web/json-request-check-bundle/issues",
+        "wiki": "https://github.com/iwf-web/json-request-check-bundle/wiki",
+        "source": "https://github.com/iwf-web/json-request-check-bundle",
+        "docs": "https://github.com/iwf-web/json-request-check-bundle/blob/main/README.md"
+    },
+    "require": {
+        "php": ">=8.2",
+        "symfony/framework-bundle": "^6.0|^7.0",
+        "symfony/dependency-injection": "^6.0|^7.0",
+        "symfony/http-kernel": "^6.0|^7.0",
+        "symfony/config": "^6.0|^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "IWF\\JsonRequestCheckBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "IWF\\JsonRequestCheckBundle\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable",
+    "config": {
+        "sort-packages": true
+    },
+    "archive": {
+        "exclude": [
+            ".github",
+            "examples",
+            ".editorconfig",
+            ".gitignore",
+            ".gitattributes",
+            "CODEOWNERS",
+            "*.md"
+        ]
     }
-  ],
-  "require": {
-    "php": ">=8.2",
-    "symfony/framework-bundle": "^6.0|^7.0",
-    "symfony/dependency-injection": "^6.0|^7.0",
-    "symfony/http-kernel": "^6.0|^7.0",
-    "symfony/config": "^6.0|^7.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "IWF\\JsonRequestCheckBundle\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "IWF\\JsonRequestCheckBundle\\Tests\\": "tests/"
-    }
-  },
-  "minimum-stability": "stable"
 }
