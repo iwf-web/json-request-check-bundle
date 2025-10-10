@@ -1,9 +1,9 @@
 .claude/settings.local.json
-tools/*
+tools/
 !tools/composer.json
+phpstan.neon
 vendor
 composer.lock
 .phpunit.result.cache
 .php-cs-fixer.cache
-/.idea/
-/.vscode/
+.idea/

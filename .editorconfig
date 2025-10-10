@@ -43,11 +43,18 @@ trim_trailing_whitespace = false
 # Trailing whitespace means manual linebreaks in Markdown thus is not trimmable
 trim_trailing_whitespace = false
 
+[{*.php,.php_cs.dist}]
+indent_size = 4
+tab_width = 4
+ij_continuation_indent_size = 4
+
 [{*.json,.phpunit.result.cache,composer.lock}]
 indent_size = 4
 tab_width = 4
+ij_continuation_indent_size = 4
 
 [phpstan.{neon,neon.dist,dist.neon}]
 indent_style = tab
 indent_size = 4
 tab_width = 4
+ij_continuation_indent_size = 4
