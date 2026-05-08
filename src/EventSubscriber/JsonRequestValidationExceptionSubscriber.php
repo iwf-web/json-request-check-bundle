@@ -11,10 +11,20 @@
 
 declare(strict_types=1);
 
-namespace IWF\JsonRequestCheckBundle\EventSubscriber;
+/**
+ * JSON Request Check Bundle
+ *
+ * @package   JsonRequestCheckBundle
+ * @author    IWF Web Solutions <web-solutions@iwf.ch>
+ * @copyright Copyright (c) 2025-2026 IWF Web Solutions <web-solutions@iwf.ch>
+ * @license   https://github.com/iwf-web/json-request-check-bundle/blob/main/LICENSE.txt MIT License
+ * @link      https://github.com/iwf-web/json-request-check-bundle
+ */
 
-use IWF\JsonRequestCheckBundle\Exception\JsonRequestValidationException;
-use IWF\JsonRequestCheckBundle\Exception\PayloadTooLargeException;
+namespace IWFWeb\JsonRequestCheckBundle\EventSubscriber;
+
+use IWFWeb\JsonRequestCheckBundle\Exception\JsonRequestValidationException;
+use IWFWeb\JsonRequestCheckBundle\Exception\PayloadTooLargeException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -54,6 +64,7 @@ final class JsonRequestValidationExceptionSubscriber implements EventSubscriberI
 
         if ($exception instanceof PayloadTooLargeException) {
             $this->handlePayloadTooLarge($event, $exception);
+
             return;
         }
 

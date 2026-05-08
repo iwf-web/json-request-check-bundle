@@ -11,7 +11,17 @@
 
 declare(strict_types=1);
 
-namespace IWF\JsonRequestCheckBundle\DependencyInjection;
+/**
+ * JSON Request Check Bundle
+ *
+ * @package   JsonRequestCheckBundle
+ * @author    IWF Web Solutions <web-solutions@iwf.ch>
+ * @copyright Copyright (c) 2025-2026 IWF Web Solutions <web-solutions@iwf.ch>
+ * @license   https://github.com/iwf-web/json-request-check-bundle/blob/main/LICENSE.txt MIT License
+ * @link      https://github.com/iwf-web/json-request-check-bundle
+ */
+
+namespace IWFWeb\JsonRequestCheckBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -29,7 +39,8 @@ class Configuration implements ConfigurationInterface
             ->info('Default value for the maximum JSON content size limit in bytes')
             ->defaultValue(10240) // 10KB as default
             ->end()
-            ->end();
+            ->end()
+        ;
 
         return $treeBuilder;
     }

@@ -11,7 +11,17 @@
 
 declare(strict_types=1);
 
-namespace IWF\JsonRequestCheckBundle\Attribute;
+/**
+ * JSON Request Check Bundle
+ *
+ * @package   JsonRequestCheckBundle
+ * @author    IWF Web Solutions <web-solutions@iwf.ch>
+ * @copyright Copyright (c) 2025-2026 IWF Web Solutions <web-solutions@iwf.ch>
+ * @license   https://github.com/iwf-web/json-request-check-bundle/blob/main/LICENSE.txt MIT License
+ * @link      https://github.com/iwf-web/json-request-check-bundle
+ */
+
+namespace IWFWeb\JsonRequestCheckBundle\Attribute;
 
 use Attribute;
 
@@ -31,7 +41,7 @@ use Attribute;
  * }
  * ```
  */
-#[Attribute(Attribute::TARGET_METHOD)]
+#[\Attribute(\Attribute::TARGET_METHOD)]
 final class JsonRequestCheck
 {
     /**

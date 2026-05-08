@@ -11,15 +11,22 @@
 
 declare(strict_types=1);
 
-namespace IWF\JsonRequestCheckBundle\DependencyInjection\Compiler;
+/**
+ * JSON Request Check Bundle
+ *
+ * @package   JsonRequestCheckBundle
+ * @author    IWF Web Solutions <web-solutions@iwf.ch>
+ * @copyright Copyright (c) 2025-2026 IWF Web Solutions <web-solutions@iwf.ch>
+ * @license   https://github.com/iwf-web/json-request-check-bundle/blob/main/LICENSE.txt MIT License
+ * @link      https://github.com/iwf-web/json-request-check-bundle
+ */
 
-use IWF\JsonRequestCheckBundle\Attribute\JsonRequestCheck;
-use IWF\JsonRequestCheckBundle\EventSubscriber\JsonRequestCheckSubscriber;
-use IWF\JsonRequestCheckBundle\Provider\MaxContentLengthValueProvider;
-use LogicException;
+namespace IWFWeb\JsonRequestCheckBundle\DependencyInjection\Compiler;
+
+use IWFWeb\JsonRequestCheckBundle\Attribute\JsonRequestCheck;
+use IWFWeb\JsonRequestCheckBundle\EventSubscriber\JsonRequestCheckSubscriber;
+use IWFWeb\JsonRequestCheckBundle\Provider\MaxContentLengthValueProvider;
 use ReflectionClass;
-use ReflectionException;
-use ReflectionMethod;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -37,8 +44,9 @@ final class MaxContentLengthValuePass implements CompilerPassInterface
     /**
      * Processes the compiler pass to collect all JsonRequestCheck attribute values
      * and provide them to the JsonRequestCheckMaxContentLengthValueProvider.
-     * @throws LogicException If the JsonRequestCheckSubscriber is not registered
-     * @throws ServiceNotFoundException|ReflectionException If a required service cannot be found
+     *
+     * @throws \LogicException                               If the JsonRequestCheckSubscriber is not registered
+     * @throws \ReflectionException|ServiceNotFoundException If a required service cannot be found
      */
     public function process(ContainerBuilder $container): void
     {
@@ -51,21 +59,24 @@ final class MaxContentLengthValuePass implements CompilerPassInterface
 
     /**
      * Checks if all required services are registered in the container.
-     * @throws LogicException If a required service is missing
+     *
+     * @throws \LogicException If a required service is missing
      */
     private function validateRequiredServices(ContainerBuilder $container): void
     {
         if (!$container->hasDefinition(JsonRequestCheckSubscriber::class)) {
-            throw new LogicException(
-                sprintf('No definition found for %s', JsonRequestCheckSubscriber::class)
+            throw new \LogicException(
+                \sprintf('No definition found for %s', JsonRequestCheckSubscriber::class),
             );
         }
     }
 
     /**
      * Collects all JsonRequestCheck attribute settings from registered controllers.
+     *
      * @return array<string, int> Map of controller class::method to maximum content length value
-     * @throws ServiceNotFoundException|ReflectionException If a service cannot be found
+     *
+     * @throws \ReflectionException|ServiceNotFoundException If a service cannot be found
      */
     private function collectJsonRequestCheckAttributes(ContainerBuilder $container): array
     {
@@ -76,7 +87,7 @@ final class MaxContentLengthValuePass implements CompilerPassInterface
             $className = $serviceDefinition->getClass();
             $reflClass = $container->getReflectionClass($className);
 
-            if (!$reflClass instanceof ReflectionClass) {
+            if (!$reflClass instanceof \ReflectionClass) {
                 continue;
             }
 
@@ -88,6 +99,7 @@ final class MaxContentLengthValuePass implements CompilerPassInterface
 
     /**
      * Returns all controller service definitions.
+     *
      * @return Definition[] Array of controller definitions
      */
     private function getControllerDefinitions(ContainerBuilder $container): array
@@ -95,25 +107,26 @@ final class MaxContentLengthValuePass implements CompilerPassInterface
         $controllerIds = array_keys($container->findTaggedServiceIds(self::CONTROLLER_TAG));
 
         return array_map(
-            fn(string $id) => $container->getDefinition($id),
-            $controllerIds
+            static fn (string $id) => $container->getDefinition($id),
+            $controllerIds,
         );
     }
 
     /**
      * Processes the methods of a controller class to find JsonRequestCheck attributes.
-     * @param ReflectionClass $reflClass The ReflectionClass instance of the controller class
-     * @param string $className The full class name of the controller
-     * @param array<string, int> $jsonRequestCheckClassMap The map of controller to content length
+     *
+     * @param \ReflectionClass<object> $reflClass                The ReflectionClass instance of the controller class
+     * @param string                   $className                The full class name of the controller
+     * @param array<string, int>       $jsonRequestCheckClassMap The map of controller to content length
+     *
      * @throws ServiceNotFoundException If a service cannot be found
      */
     private function processClassMethods(
-        ReflectionClass $reflClass,
+        \ReflectionClass $reflClass,
         string $className,
         array &$jsonRequestCheckClassMap,
-    ): void
-    {
-        $publicNonStaticMethods = $reflClass->getMethods(ReflectionMethod::IS_PUBLIC | ~ReflectionMethod::IS_STATIC);
+    ): void {
+        $publicNonStaticMethods = $reflClass->getMethods(\ReflectionMethod::IS_PUBLIC | ~\ReflectionMethod::IS_STATIC);
 
         foreach ($publicNonStaticMethods as $reflMethod) {
             $attributes = $reflMethod->getAttributes(JsonRequestCheck::class);
@@ -128,10 +141,12 @@ final class MaxContentLengthValuePass implements CompilerPassInterface
 
     /**
      * Adds the method configuration to the class map.
-     * @param \ReflectionAttribute $attribute The JsonRequestCheck attribute
-     * @param string $className The class name of the controller
-     * @param string $methodName The method name
-     * @param array<string, int> $jsonRequestCheckClassMap The map of controller to content length
+     *
+     * @param \ReflectionAttribute<JsonRequestCheck> $attribute                The JsonRequestCheck attribute
+     * @param string                                 $className                The class name of the controller
+     * @param string                                 $methodName               The method name
+     * @param array<string, int>                     $jsonRequestCheckClassMap The map of controller to content length
+     *
      * @throws ServiceNotFoundException If a service cannot be found
      */
     private function addMethodConfigToClassMap(
@@ -139,10 +154,9 @@ final class MaxContentLengthValuePass implements CompilerPassInterface
         string $className,
         string $methodName,
         array &$jsonRequestCheckClassMap,
-    ): void
-    {
+    ): void {
         try {
-            $classMapKey = sprintf('%s::%s', $className, $methodName);
+            $classMapKey = \sprintf('%s::%s', $className, $methodName);
             $attributeInstance = $attribute->newInstance();
 
             if ($attributeInstance instanceof JsonRequestCheck) {
@@ -152,31 +166,35 @@ final class MaxContentLengthValuePass implements CompilerPassInterface
             $this->throwServiceNotFoundException($e, $classMapKey);
         } catch (\Exception $e) {
             throw new \RuntimeException(
-                sprintf('Error processing JsonRequestCheck attribute for %s: %s', $classMapKey, $e->getMessage()),
+                \sprintf('Error processing JsonRequestCheck attribute for %s: %s', $classMapKey, $e->getMessage()),
                 0,
-                $e
+                $e,
             );
         }
     }
 
     /**
      * Registers the class map in the container.
+     *
+     * @param array<string, int> $jsonRequestCheckClassMap The map of controller to content length
      */
     private function registerClassMap(ContainerBuilder $container, array $jsonRequestCheckClassMap): void
     {
         $container->getDefinition(MaxContentLengthValueProvider::class)
-            ->setArgument('$jsonRequestCheckClassMap', $jsonRequestCheckClassMap);
+            ->setArgument('$jsonRequestCheckClassMap', $jsonRequestCheckClassMap)
+        ;
     }
 
     /**
      * Throws an enhanced ServiceNotFoundException with additional context.
+     *
      * @throws ServiceNotFoundException
      */
-    private function throwServiceNotFoundException(ServiceNotFoundException|\Exception $e, string $calledFrom): void
+    private function throwServiceNotFoundException(\Exception|ServiceNotFoundException $e, string $calledFrom): void
     {
         throw new ServiceNotFoundException(
             id: $e->getId(),
-            msg: $e->getMessage() . ' ' . sprintf('Called from %s ', $calledFrom),
+            msg: $e->getMessage().' '.\sprintf('Called from %s ', $calledFrom),
         );
     }
 }

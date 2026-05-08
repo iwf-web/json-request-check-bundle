@@ -4,11 +4,11 @@ services:
     autoconfigure: true
     public: false
 
-  IWF\JsonRequestCheckBundle\:
+  IWFWeb\JsonRequestCheckBundle\:
     resource: '../../*'
     exclude: '../../{DependencyInjection,Tests,Resources}'
 
-  IWF\JsonRequestCheckBundle\Provider\MaxContentLengthValueProvider:
+  IWFWeb\JsonRequestCheckBundle\Provider\MaxContentLengthValueProvider:
     arguments:
       $jsonRequestCheckClassMap: [] # This will be populated by JsonRequestCheckPass
       $defaultMaxContentLength: '%iwf_json_request_check.default_max_content_length%'

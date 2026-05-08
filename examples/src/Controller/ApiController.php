@@ -1,11 +1,21 @@
 <?php
 
+/**
+ * JSON Request Check Bundle
+ *
+ * @package   JsonRequestCheckBundle
+ * @author    IWF Web Solutions <web-solutions@iwf.ch>
+ * @copyright Copyright (c) 2025-2026 IWF Web Solutions <web-solutions@iwf.ch>
+ * @license   https://github.com/iwf-web/json-request-check-bundle/blob/main/LICENSE.txt MIT License
+ * @link      https://github.com/iwf-web/json-request-check-bundle
+ */
+
 namespace App\Controller\Api;
 
-use IWF\JsonRequestCheckBundle\Attribute\JsonRequestCheck;
+use IWFWeb\JsonRequestCheckBundle\Attribute\JsonRequestCheck;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
 /**
@@ -34,7 +44,7 @@ class ApiController extends AbstractController
         return $this->json([
             'status' => 'success',
             'contentSize' => $request->server->get('HTTP_CONTENT_LENGTH'),
-            ...$jsonData
+            ...$jsonData,
         ]);
     }
 }

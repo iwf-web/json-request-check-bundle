@@ -1,0 +1,8 @@
+# https://phpstan.org/config-reference
+includes:
+	- phpstan-baseline.neon
+parameters:
+	level: max
+	paths:
+		- src
+	errorFormat: table

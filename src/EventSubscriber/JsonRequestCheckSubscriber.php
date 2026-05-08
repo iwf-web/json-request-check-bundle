@@ -11,9 +11,19 @@
 
 declare(strict_types=1);
 
-namespace IWF\JsonRequestCheckBundle\EventSubscriber;
+/**
+ * JSON Request Check Bundle
+ *
+ * @package   JsonRequestCheckBundle
+ * @author    IWF Web Solutions <web-solutions@iwf.ch>
+ * @copyright Copyright (c) 2025-2026 IWF Web Solutions <web-solutions@iwf.ch>
+ * @license   https://github.com/iwf-web/json-request-check-bundle/blob/main/LICENSE.txt MIT License
+ * @link      https://github.com/iwf-web/json-request-check-bundle
+ */
 
-use IWF\JsonRequestCheckBundle\Check\JsonRequestCheckersChain;
+namespace IWFWeb\JsonRequestCheckBundle\EventSubscriber;
+
+use IWFWeb\JsonRequestCheckBundle\Check\JsonRequestCheckersChain;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;

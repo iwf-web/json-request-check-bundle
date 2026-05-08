@@ -11,10 +11,20 @@
 
 declare(strict_types=1);
 
-namespace IWF\JsonRequestCheckBundle;
+/**
+ * JSON Request Check Bundle
+ *
+ * @package   JsonRequestCheckBundle
+ * @author    IWF Web Solutions <web-solutions@iwf.ch>
+ * @copyright Copyright (c) 2025-2026 IWF Web Solutions <web-solutions@iwf.ch>
+ * @license   https://github.com/iwf-web/json-request-check-bundle/blob/main/LICENSE.txt MIT License
+ * @link      https://github.com/iwf-web/json-request-check-bundle
+ */
 
-use IWF\JsonRequestCheckBundle\DependencyInjection\Compiler\JsonRequestCheckersPass;
-use IWF\JsonRequestCheckBundle\DependencyInjection\Compiler\MaxContentLengthValuePass;
+namespace IWFWeb\JsonRequestCheckBundle;
+
+use IWFWeb\JsonRequestCheckBundle\DependencyInjection\Compiler\JsonRequestCheckersPass;
+use IWFWeb\JsonRequestCheckBundle\DependencyInjection\Compiler\MaxContentLengthValuePass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -32,9 +42,7 @@ class IWFJsonRequestCheckBundle extends Bundle
     }
 
     /**
-     * @param ContainerBuilder $container
      * @param array<CompilerPassInterface> $compilerPasses
-     * @return void
      */
     public function addCompilerPasses(ContainerBuilder $container, array $compilerPasses): void
     {

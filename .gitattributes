@@ -1,0 +1,12 @@
+# This is what is relevant for composer installs
+# Whitelist: exclude everything, selectively include for distribution
+* export-ignore
+
+/src/ -export-ignore
+/src/** -export-ignore
+
+/composer.json -export-ignore
+
+/CHANGELOG.md -export-ignore
+/LICENSE.txt -export-ignore
+/README.md -export-ignore

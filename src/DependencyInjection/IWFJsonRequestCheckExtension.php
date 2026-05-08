@@ -11,9 +11,19 @@
 
 declare(strict_types=1);
 
-namespace IWF\JsonRequestCheckBundle\DependencyInjection;
+/**
+ * JSON Request Check Bundle
+ *
+ * @package   JsonRequestCheckBundle
+ * @author    IWF Web Solutions <web-solutions@iwf.ch>
+ * @copyright Copyright (c) 2025-2026 IWF Web Solutions <web-solutions@iwf.ch>
+ * @license   https://github.com/iwf-web/json-request-check-bundle/blob/main/LICENSE.txt MIT License
+ * @link      https://github.com/iwf-web/json-request-check-bundle
+ */
 
-use IWF\JsonRequestCheckBundle\Check\JsonRequestCheckerInterface;
+namespace IWFWeb\JsonRequestCheckBundle\DependencyInjection;
+
+use IWFWeb\JsonRequestCheckBundle\Check\JsonRequestCheckerInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -26,13 +36,14 @@ class IWFJsonRequestCheckExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yaml');
 
         $container->setParameter('iwf_json_request_check.default_max_content_length', $config['default_max_content_length']);
 
         $container
             ->registerForAutoconfiguration(JsonRequestCheckerInterface::class)
-            ->addTag('iwf.jsonRequestChecker');
+            ->addTag('iwf.jsonRequestChecker')
+        ;
     }
 }

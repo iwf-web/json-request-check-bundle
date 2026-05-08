@@ -1,8 +1,18 @@
 <?php
 
-namespace IWF\JsonRequestCheckBundle\Check;
+/**
+ * JSON Request Check Bundle
+ *
+ * @package   JsonRequestCheckBundle
+ * @author    IWF Web Solutions <web-solutions@iwf.ch>
+ * @copyright Copyright (c) 2025-2026 IWF Web Solutions <web-solutions@iwf.ch>
+ * @license   https://github.com/iwf-web/json-request-check-bundle/blob/main/LICENSE.txt MIT License
+ * @link      https://github.com/iwf-web/json-request-check-bundle
+ */
 
-use IWF\JsonRequestCheckBundle\Exception\JsonRequestValidationException;
+namespace IWFWeb\JsonRequestCheckBundle\Check;
+
+use IWFWeb\JsonRequestCheckBundle\Exception\JsonRequestValidationException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -14,20 +24,14 @@ class JsonRequestCheckersChain
      */
     private $checkers; // TODO currently php 7 syntax
 
-    /**
-     * @param JsonRequestCheckerInterface[] $checkers
-     */
     public function __construct()
     {
         // TODO currently php 7 syntax
         $this->checkers = [];
     }
 
-
     /**
-     * @param KernelEvent $event
      * @throws HttpExceptionInterface
-     * @return void
      */
     public function checkEvent(KernelEvent $event): void
     {
@@ -53,7 +57,8 @@ class JsonRequestCheckersChain
 
     /**
      * Handle invalid requests
-     * (╯°□°)╯︵ ┻━┻
+     * (╯°□°)╯︵ ┻━┻.
+     *
      * @throws HttpExceptionInterface
      */
     private function handleInvalidRequest(KernelEvent $event, Request $request, JsonRequestCheckResult $result): void
@@ -66,8 +71,7 @@ class JsonRequestCheckersChain
 
         throw new $exceptionClass(
             $result->getErrorMessage(),
-            $result->getErrorContext()
+            $result->getErrorContext(),
         );
     }
-
 }

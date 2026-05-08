@@ -11,23 +11,39 @@
 
 declare(strict_types=1);
 
-namespace IWF\JsonRequestCheckBundle\Exception;
+/**
+ * JSON Request Check Bundle
+ *
+ * @package   JsonRequestCheckBundle
+ * @author    IWF Web Solutions <web-solutions@iwf.ch>
+ * @copyright Copyright (c) 2025-2026 IWF Web Solutions <web-solutions@iwf.ch>
+ * @license   https://github.com/iwf-web/json-request-check-bundle/blob/main/LICENSE.txt MIT License
+ * @link      https://github.com/iwf-web/json-request-check-bundle
+ */
+
+namespace IWFWeb\JsonRequestCheckBundle\Exception;
 
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Throwable;
 
 class JsonRequestValidationException extends HttpException
 {
     public const HTTP_STATUS_CODE = 400;
 
+    /** @var array<string, mixed> */
     private array $errorContext;
 
-    public function __construct(string $message, array $errorContext = [], ?Throwable $previous = null)
+    /**
+     * @param array<string, mixed> $errorContext
+     */
+    public function __construct(string $message, array $errorContext = [], ?\Throwable $previous = null)
     {
         parent::__construct(self::HTTP_STATUS_CODE, $message, $previous);
         $this->errorContext = $errorContext;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getErrorContext(): array
     {
         return $this->errorContext;

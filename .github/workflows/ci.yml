@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: ["8.2", "8.3", "8.4", "8.5", "8.6"]
+    name: Lint (PHP ${{ matrix.php-version }})
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          tools: composer:v2
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+      - name: Cache Composer dependencies
+        uses: actions/cache@v5
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Validate composer.json
+        run: |
+          composer validate --strict --no-check-publish
+          composer validate --strict --no-check-publish --working-dir=tools
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Install dev tools (tools/)
+        run: composer install --working-dir=tools --prefer-dist --no-progress
+
+      - name: PHP Linter
+        run: find . -name "*.php" -not -path "./vendor/*" -not -path "./tools/vendor/*" | xargs -P$(nproc) -n1 php -l
+
+      - name: Run PHP-CS-Fixer
+        run: tools/vendor/bin/php-cs-fixer fix --dry-run --diff
+
+      - name: Run PHPStan
+        run: tools/vendor/bin/phpstan analyse --no-progress

@@ -11,10 +11,19 @@
 
 declare(strict_types=1);
 
-namespace IWF\JsonRequestCheckBundle\Exception;
+/**
+ * JSON Request Check Bundle
+ *
+ * @package   JsonRequestCheckBundle
+ * @author    IWF Web Solutions <web-solutions@iwf.ch>
+ * @copyright Copyright (c) 2025-2026 IWF Web Solutions <web-solutions@iwf.ch>
+ * @license   https://github.com/iwf-web/json-request-check-bundle/blob/main/LICENSE.txt MIT License
+ * @link      https://github.com/iwf-web/json-request-check-bundle
+ */
+
+namespace IWFWeb\JsonRequestCheckBundle\Exception;
 
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Throwable;
 
 /**
  * Exception thrown when a JSON payload exceeds the maximum allowed size.
@@ -26,36 +35,35 @@ final class PayloadTooLargeException extends HttpException
     public const HTTP_STATUS_CODE = 413; // Payload Too Large
 
     /**
-     * @var int|null The size of the received payload in bytes
+     * @var null|int The size of the received payload in bytes
      */
     private ?int $receivedLength;
 
     /**
-     * @var int|null The maximum allowed payload size in bytes
+     * @var null|int The maximum allowed payload size in bytes
      */
     private ?int $allowedLength;
 
     /**
      * Create a new PayloadTooLargeException.
      *
-     * @param int|null $receivedLength The size of the received payload in bytes
-     * @param int|null $allowedLength The maximum allowed payload size in bytes
-     * @param string|null $message Custom error message (if null, a message will be generated)
-     * @param Throwable|null $previous Previous exception
-     * @param int $code Error code
-     * @param array $headers Additional HTTP headers to include in the response
+     * @param null|string           $message      Custom error message (if null, a message will be generated)
+     * @param array<string, mixed>  $errorContext Context describing the violation; reads `receivedLength` and `allowedLength` keys
+     * @param null|\Throwable       $previous     Previous exception
+     * @param int                   $code         Error code
+     * @param array<string, string> $headers      Additional HTTP headers to include in the response
      */
     public function __construct(
         ?string $message = null,
         array $errorContext = [],
-        ?Throwable $previous = null,
+        ?\Throwable $previous = null,
         int $code = 0,
-        array $headers = []
+        array $headers = [],
     ) {
         $this->receivedLength = $errorContext['receivedLength'] ?? null;
         $this->allowedLength = $errorContext['allowedLength'] ?? null;
 
-        $message = $message ?? $this->generateDefaultMessage();
+        $message ??= $this->generateDefaultMessage();
 
         parent::__construct(self::HTTP_STATUS_CODE, $message, $previous, $headers, $code);
     }
@@ -82,24 +90,24 @@ final class PayloadTooLargeException extends HttpException
     private function generateDefaultMessage(): string
     {
         if ($this->receivedLength !== null && $this->allowedLength !== null) {
-            return sprintf(
+            return \sprintf(
                 'JSON payload too large: %d bytes received, maximum allowed is %d bytes',
                 $this->receivedLength,
-                $this->allowedLength
+                $this->allowedLength,
             );
         }
 
         if ($this->receivedLength !== null) {
-            return sprintf(
+            return \sprintf(
                 'JSON payload too large: %d received bytes exceeding maximum allowed bytes',
-                $this->receivedLength
+                $this->receivedLength,
             );
         }
 
         if ($this->allowedLength !== null) {
-            return sprintf(
+            return \sprintf(
                 'JSON payload too large: maximum allowed bytes (%d) exceeded',
-                $this->allowedLength
+                $this->allowedLength,
             );
         }
 

@@ -11,7 +11,17 @@
 
 declare(strict_types=1);
 
-namespace IWF\JsonRequestCheckBundle\Provider;
+/**
+ * JSON Request Check Bundle
+ *
+ * @package   JsonRequestCheckBundle
+ * @author    IWF Web Solutions <web-solutions@iwf.ch>
+ * @copyright Copyright (c) 2025-2026 IWF Web Solutions <web-solutions@iwf.ch>
+ * @license   https://github.com/iwf-web/json-request-check-bundle/blob/main/LICENSE.txt MIT License
+ * @link      https://github.com/iwf-web/json-request-check-bundle
+ */
+
+namespace IWFWeb\JsonRequestCheckBundle\Provider;
 
 /**
  * Provides the maximum content length for JSON requests based on controller configuration.
@@ -23,7 +33,7 @@ readonly class MaxContentLengthValueProvider
 {
     /**
      * @param array<string, int> $jsonRequestCheckClassMap Map of controller class::method to max content length
-     * @param int $defaultMaxContentLength Default max content length used as fallback
+     * @param int                $defaultMaxContentLength  Default max content length used as fallback
      */
     public function __construct(
         private array $jsonRequestCheckClassMap,
@@ -39,13 +49,14 @@ readonly class MaxContentLengthValueProvider
      * 3. Falls back to the default max content length
      *
      * @param string $controllerClassAndAction Controller class and action in format "Class::method"
+     *
      * @return int The maximum allowed content length in bytes
      */
     public function getMaxContentLengthValue(string $controllerClassAndAction): int
     {
         // For invokable controllers, the route may reference the class name only,
         // but the attributes are on the __invoke method
-        $invokableControllerKey = $controllerClassAndAction . '::__invoke';
+        $invokableControllerKey = $controllerClassAndAction.'::__invoke';
 
         if (isset($this->jsonRequestCheckClassMap[$invokableControllerKey])) {
             return $this->jsonRequestCheckClassMap[$invokableControllerKey];
